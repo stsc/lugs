@@ -368,7 +368,7 @@ __DATA__
 # fussnoten
 -
 <p>
-<font size="-1">Alle Angaben ohne Gew&auml;hr, letzte Änderung der Terminliste: [% AENDERUNG %]</font>
+<font size="-1">Alle Angaben ohne Gew&auml;hr, letzte &Auml;nderung der Terminliste: [% AENDERUNG %]</font>
 
 # blank
 -
