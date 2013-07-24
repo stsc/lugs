@@ -74,7 +74,7 @@ use constant true => 1;
 
 use File::Copy qw(copy);
 use File::Temp qw(tempfile);
-use LUGS::Events::Parser;
+use LUGS::Events::Parser ();
 
 # Return a new instance of our class.
 sub new
