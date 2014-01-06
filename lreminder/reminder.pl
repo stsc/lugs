@@ -15,7 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # Author: Steven Schubiger <stsc@refcnt.org>
-# Last modified: Thu Jan 31 11:12:22 CET 2013
+# Last modified: Wed Dec  4 21:18:20 CET 2013
 
 use strict;
 use warnings;
@@ -24,6 +24,7 @@ use constant true  => 1;
 use constant false => 0;
 
 use DBI ();
+use Encode qw(encode);
 use File::Basename ();
 use File::Spec ();
 use FindBin qw($Bin);
@@ -34,7 +35,7 @@ use Mail::Sendmail qw(sendmail);
 use Text::Wrap::Smart::XS qw(fuzzy_wrap);
 use WWW::Mechanize ();
 
-my $VERSION = '0.41';
+my $VERSION = '0.42';
 
 #-----------------------
 # Start of configuration
@@ -228,7 +229,7 @@ MSG
         sendmail(
             From    => $Config->{mail_from},
             To      => $mail_subscriber,
-            Subject => "LUGS Reminder - $title",
+            Subject => encode('MIME-Q', "LUGS Reminder - $title"),
             Message => $message,
         ) or die $Mail::Sendmail::error;
     }
