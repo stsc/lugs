@@ -34,9 +34,9 @@ my $Config = {
        winti         => 'd6d6ce',	# ex http://www.stadt-winterthur.ch/
        innerschweiz  => '8abed7',	# ex http://www.luzern.ch/
        kreuzlingen   => 'f9f9f9',	# ehemals aargau (ex http://www.ag.ch/)
-       uzwil         => 'e2b1a5',	# wie heisst diese Farbe? :)
        stgallen      => 'e2b1a5',	# wie heisst diese Farbe? :)
        gnupingu      => 'ffd133',	# von http://www.gnupingu.ch/
+       debian        => 'ffa500',	# orange
     },
     ical_dir    => 'ical',
 };
