@@ -15,7 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # Author: Steven Schubiger <stsc@refcnt.org>
-# Last modified: Wed Dec  4 21:18:20 CET 2013
+# Last modified: Mon Jan 13 22:07:51 CET 2014
 
 use strict;
 use warnings;
@@ -23,6 +23,7 @@ use lib qw(lib);
 use constant true  => 1;
 use constant false => 0;
 
+use DateTime ();
 use DBI ();
 use Encode qw(encode);
 use File::Basename ();
@@ -35,7 +36,7 @@ use Mail::Sendmail qw(sendmail);
 use Text::Wrap::Smart::XS qw(fuzzy_wrap);
 use WWW::Mechanize ();
 
-my $VERSION = '0.42';
+my $VERSION = '0.43';
 
 #-----------------------
 # Start of configuration
@@ -96,7 +97,7 @@ sub fetch_and_write_events
 
 sub init
 {
-    my ($parser, $month_days, $current) = @_;
+    my ($parser) = @_;
 
     $$parser = LUGS::Events::Parser->new($file, {
         filter_html  => true,
@@ -116,28 +117,12 @@ sub init
         strip_text => [ 'mailto:' ],
     });
     unlink $file;
-
-    %$month_days = (
-        1 => 31,   7 => 31,
-        2 => 28,   8 => 31,
-        3 => 31,   9 => 30,
-        4 => 30,  10 => 31,
-        5 => 31,  11 => 30,
-        6 => 30,  12 => 31,
-    );
-
-    %$current = do {
-        my @time = (localtime)[3..5];
-        $time[1]++;
-        $time[2] += 1900;
-        map { $_ => shift @time } qw(day month year);
-    };
 }
 
 sub process_events
 {
-    my   ($parser,  %month_days,  %current);
-    init(\$parser, \%month_days, \%current);
+    my $parser;
+    init(\$parser);
 
     while (my $event = $parser->next_event) {
         my %event = (
@@ -161,24 +146,15 @@ sub process_events
             my $subscriptions = $sth{subscriptions}->fetchrow_hashref;
             next unless $subscriptions->{$event{color}};
 
-            my %notify = %current;
+            my $notify = DateTime->now(time_zone => 'Europe/Zurich');
 
             $subscriber->{notify} ||= 0;
 
-            my $day = $current{day} + $subscriber->{notify};
-            my $days_in_month = $month_days{$current{month}};
+            $notify->add(days => $subscriber->{notify});
 
-            if ($day > $days_in_month) {
-                $notify{day} = $day - $days_in_month;
-                $notify{month}++;
-            }
-            else {
-                $notify{day} += $subscriber->{notify};
-            }
-
-            if ($event{year}  == $notify{year}
-             && $event{month} == $notify{month}
-             && $event{day}   == $notify{day}
+            if ($event{year}  == $notify->year
+             && $event{month} == $notify->month
+             && $event{day}   == $notify->day
             ) {
                 send_mail($event, $subscriber->{mail});
             }
