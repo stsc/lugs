@@ -15,7 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # Author: Steven Schubiger <stsc@refcnt.org>
-# Last modified: Mon Jan 13 22:07:51 CET 2014
+# Last modified: Tue Jul 15 21:08:39 CEST 2014
 
 use strict;
 use warnings;
@@ -36,7 +36,7 @@ use Mail::Sendmail qw(sendmail);
 use Text::Wrap::Smart::XS qw(fuzzy_wrap);
 use WWW::Mechanize ();
 
-my $VERSION = '0.43';
+my $VERSION = '0.44';
 
 #-----------------------
 # Start of configuration
@@ -90,7 +90,7 @@ sub fetch_and_write_events
     my $mech = WWW::Mechanize->new;
     my $http = $mech->get($Config->{events_url});
 
-    open(my $fh, '>', $file) or die "Cannot open $file: $!\n";
+    open(my $fh, '>', $file) or die "Cannot open $file for writing: $!\n";
     print {$fh} $http->content;
     close($fh);
 }
@@ -207,7 +207,7 @@ MSG
             To      => $mail_subscriber,
             Subject => encode('MIME-Q', "LUGS Reminder - $title"),
             Message => $message,
-        ) or die $Mail::Sendmail::error;
+        ) or die "Cannot send mail: $Mail::Sendmail::error";
     }
     elsif ($test) {
         printf "[%s] <$mail_subscriber> ($color)\n", scalar localtime;
