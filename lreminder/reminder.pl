@@ -15,7 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # Author: Steven Schubiger <stsc@refcnt.org>
-# Last modified: Tue Jul 15 21:08:39 CEST 2014
+# Last modified: Wed Jul 16 16:17:32 CEST 2014
 
 use strict;
 use warnings;
@@ -34,9 +34,10 @@ use Hook::Output::File ();
 use LUGS::Events::Parser ();
 use Mail::Sendmail qw(sendmail);
 use Text::Wrap::Smart::XS qw(fuzzy_wrap);
+use URI ();
 use WWW::Mechanize ();
 
-my $VERSION = '0.44';
+my $VERSION = '0.45';
 
 #-----------------------
 # Start of configuration
@@ -56,7 +57,7 @@ my $Config = {
 #---------------------
 
 my $dbh  = DBI->connect("dbi:mysql(RaiseError=>1):$Config->{dbase_name}", $Config->{dbase_user}, $Config->{dbase_pass});
-my $file = File::Basename::basename($Config->{events_url});
+my $file = (URI->new($Config->{events_url})->path_segments)[-1];
 
 my ($test, $run) = (false, false);
 
