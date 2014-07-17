@@ -15,7 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # Author: Steven Schubiger <stsc@refcnt.org>
-# Last modified: Wed Jul 16 16:17:32 CEST 2014
+# Last modified: Thu Jul 17 11:55:40 CEST 2014
 
 use strict;
 use warnings;
@@ -37,7 +37,7 @@ use Text::Wrap::Smart::XS qw(fuzzy_wrap);
 use URI ();
 use WWW::Mechanize ();
 
-my $VERSION = '0.45';
+my $VERSION = '0.46';
 
 #-----------------------
 # Start of configuration
@@ -57,7 +57,7 @@ my $Config = {
 #---------------------
 
 my $dbh  = DBI->connect("dbi:mysql(RaiseError=>1):$Config->{dbase_name}", $Config->{dbase_user}, $Config->{dbase_pass});
-my $file = (URI->new($Config->{events_url})->path_segments)[-1];
+my $file = File::Spec->catfile('tmp', (URI->new($Config->{events_url})->path_segments)[-1]);
 
 my ($test, $run) = (false, false);
 
