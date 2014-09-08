@@ -15,7 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # Author: Steven Schubiger <stsc@refcnt.org>
-# Last modified: Thu Jul 17 11:55:40 CEST 2014
+# Last modified: Fri Jul 25 16:51:43 CEST 2014
 
 use strict;
 use warnings;
@@ -37,7 +37,7 @@ use Text::Wrap::Smart::XS qw(fuzzy_wrap);
 use URI ();
 use WWW::Mechanize ();
 
-my $VERSION = '0.46';
+my $VERSION = '0.47';
 
 #-----------------------
 # Start of configuration
@@ -115,6 +115,7 @@ sub init
                 fields  => [ qw(more) ],
             } ],
         },
+        purge_tags => [ qw(location responsible more) ],
         strip_text => [ 'mailto:' ],
     });
     unlink $file;
