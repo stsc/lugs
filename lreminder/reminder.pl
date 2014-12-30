@@ -15,7 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # Author: Steven Schubiger <stsc@refcnt.org>
-# Last modified: Mon Aug 11 21:00:55 CEST 2014
+# Last modified: Mon Dec 29 19:06:34 CET 2014
 
 use strict;
 use warnings;
@@ -37,7 +37,7 @@ use Text::Wrap::Smart::XS qw(fuzzy_wrap);
 use URI ();
 use WWW::Mechanize ();
 
-my $VERSION = '0.48';
+my $VERSION = '0.49';
 
 #-----------------------
 # Start of configuration
@@ -186,7 +186,7 @@ sub send_mail
 
     my $month_name = $month_names{$month};
 
-my $message = (<<MSG);
+my $message = (<<"MSG");
 Wann:\t$wday, $simple_day. $month_name $year, $time Uhr
 Was :\t$title
 Wo  :\t$location
@@ -238,7 +238,7 @@ sub info_string
     $modified =~ s/(?<=\b) (?:\d{2}\:?){3} (?=\b)//x;
     $modified =~ s/\s+/ /g;
 
-    my $info = <<EOT;
+    my $info = <<"EOT";
 -- 
 running $script v$VERSION - last modified: $modified
 EOT
