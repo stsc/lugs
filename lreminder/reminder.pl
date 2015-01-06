@@ -15,7 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # Author: Steven Schubiger <stsc@refcnt.org>
-# Last modified: Mon Dec 29 19:06:34 CET 2014
+# Last modified: Tue Jan  6 14:37:04 CET 2015
 
 use strict;
 use warnings;
@@ -37,7 +37,7 @@ use Text::Wrap::Smart::XS qw(fuzzy_wrap);
 use URI ();
 use WWW::Mechanize ();
 
-my $VERSION = '0.49';
+my $VERSION = '0.50';
 
 #-----------------------
 # Start of configuration
@@ -236,7 +236,7 @@ sub info_string
     my $modified = localtime((stat($0))[9]);
 
     $modified =~ s/(?<=\b) (?:\d{2}\:?){3} (?=\b)//x;
-    $modified =~ s/\s+/ /g;
+    $modified =~ s/\s{2,}/ /g;
 
     my $info = <<"EOT";
 -- 
