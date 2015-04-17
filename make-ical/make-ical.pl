@@ -15,13 +15,13 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # Author: Steven Schubiger <stsc@refcnt.org>
-# Last modified: Sun Jul 21 22:23:31 CEST 2013
+# Last modified: Fri Apr 17 23:12:38 CEST 2015
 
 use strict;
 use warnings;
 use lib qw(lib);
 
-my $VERSION = '0.02';
+my $VERSION = '0.03';
 
 my $Config = {
     base_url => 'http://www.lugs.ch/lugs/termine',
@@ -114,21 +114,23 @@ sub process_events
         $ical_event->add_properties(
             dtstamp => Date::ICal->new->ical,
             dtstart => Date::ICal->new(
-                year  => $year,
-                month => $month,
-                day   => $day,
-                hour  => $time{start_hour},
-                min   => $time{start_min},
-                sec   => 00,
-            )->ical(offset => $offset),
+                year   => $year,
+                month  => $month,
+                day    => $day,
+                hour   => $time{start_hour},
+                min    => $time{start_min},
+                sec    => 00,
+                offset => $offset,
+            )->ical,
             dtend => Date::ICal->new(
-                year  => $year,
-                month => $month,
-                day   => $day,
-                hour  => $time{end_hour},
-                min   => $time{end_min},
-                sec   => 00,
-            )->ical(offset => $offset),
+                year   => $year,
+                month  => $month,
+                day    => $day,
+                hour   => $time{end_hour},
+                min    => $time{end_min},
+                sec    => 00,
+                offset => $offset,
+            )->ical,
             location    => $location,
             summary     => $summary,
             defined $more ? (
