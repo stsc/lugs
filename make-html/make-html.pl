@@ -3,13 +3,13 @@
 # Konvertiert die LUGS-Terminliste (im ASCII Format) in ein HTML-File
 #
 # (c) 1996-1998               Roland Alder
-# (c) 2007-2008, 2011-2014    Steven Schubiger
+# (c) 2007-2008, 2011-2015    Steven Schubiger
 
 use strict;
 use warnings;
 use lib qw(lib);
 
-my $VERSION = '0.04';
+my $VERSION = '0.05';
 
 #-----------------------
 # Start of configuration
@@ -228,7 +228,7 @@ sub process_events
             LINK => $ics_link,
         });
 
-        $self->print_raw_html('</td></tr>');
+        $self->print_raw_html('</tr>');
     }
 
     $self->print_template('tabellenende');
