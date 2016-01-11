@@ -15,7 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # Author: Steven Schubiger <stsc@refcnt.org>
-# Last modified: Tue Jan  6 14:37:04 CET 2015
+# Last modified: Fri Jan  8 12:43:13 CET 2016
 
 use strict;
 use warnings;
@@ -37,7 +37,7 @@ use Text::Wrap::Smart::XS qw(fuzzy_wrap);
 use URI ();
 use WWW::Mechanize ();
 
-my $VERSION = '0.50';
+my $VERSION = '0.51';
 
 #-----------------------
 # Start of configuration
@@ -50,6 +50,8 @@ my $Config = {
     dbase_name => '<hidden>',
     dbase_user => '<hidden>',
     dbase_pass => '<hidden>',
+    sleep_secs => 300,
+    max_tries  => 48,
 };
 
 #---------------------
@@ -89,11 +91,31 @@ sub getopts
 sub fetch_and_write_events
 {
     my $mech = WWW::Mechanize->new;
-    my $http = $mech->get($Config->{events_url});
 
-    open(my $fh, '>', $file) or die "Cannot open $file for writing: $!\n";
-    print {$fh} $http->content;
-    close($fh);
+    my ($http, $retry, $tries);
+    $http = undef;
+
+    do {
+        $retry = false;
+        $tries++;
+        eval {
+            $http = $mech->get($Config->{events_url});
+        } or do {
+            warn "[${\scalar localtime}] $@";
+            $retry = ($tries < $Config->{max_tries}) ? true : false;
+            sleep $Config->{sleep_secs} if $retry;
+        };
+    } while ($retry);
+
+    if (defined $http) {
+        open(my $fh, '>', $file) or die "Cannot open $file for writing: $!\n";
+        print {$fh} $http->content;
+        close($fh);
+    }
+    else {
+        warn "[${\scalar localtime}] ${\File::Basename::basename($0)} not entirely run, no http content\n";
+        exit;
+    }
 }
 
 sub init
