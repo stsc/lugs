@@ -15,7 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # Author: Steven Schubiger <stsc@refcnt.org>
-# Last modified: Fri Jan  8 12:43:13 CET 2016
+# Last modified: Thu Feb  4 23:21:02 CET 2016
 
 use strict;
 use warnings;
@@ -37,7 +37,7 @@ use Text::Wrap::Smart::XS qw(fuzzy_wrap);
 use URI ();
 use WWW::Mechanize ();
 
-my $VERSION = '0.51';
+my $VERSION = '0.52';
 
 #-----------------------
 # Start of configuration
@@ -47,6 +47,7 @@ my $Config = {
     events_url => 'http://www.lugs.ch/lugs/termine/termine.txt',
     form_url   => 'http://lists.lugs.ch/reminder.cgi',
     mail_from  => 'reminder@lugs.ch',
+    mail_admin => 'stsc@refcnt.org',
     dbase_name => '<hidden>',
     dbase_user => '<hidden>',
     dbase_pass => '<hidden>',
@@ -113,7 +114,24 @@ sub fetch_and_write_events
         close($fh);
     }
     else {
-        warn "[${\scalar localtime}] ${\File::Basename::basename($0)} not entirely run, no http content\n";
+        my $script = File::Basename::basename($0);
+        warn "[${\scalar localtime}] $script not entirely run, no http content\n";
+        my $message = <<"MSG";
+hello,
+
+This is lreminder [<$Config->{mail_from}>].
+
+Could not run $script entirely, no http content.
+Please re-run manually with `$0 --run' today.
+
+thanks,
+MSG
+        sendmail(
+            From    => $Config->{mail_from},
+            To      => $Config->{mail_admin},
+            Subject => 'LUGS Reminder - warning: timeout',
+            Message => $message,
+        ) or die "Cannot send mail: $Mail::Sendmail::error";
         exit;
     }
 }
