@@ -2,14 +2,14 @@
 #
 # Konvertiert die LUGS-Terminliste (im ASCII Format) in ein HTML-File
 #
-# (c) 1996-1998               Roland Alder
-# (c) 2007-2008, 2011-2015    Steven Schubiger
+# (c) 1996-1998                     Roland Alder
+# (c) 2007-2008, 2011-2015, 2017    Steven Schubiger
 
 use strict;
 use warnings;
 use lib qw(lib);
 
-my $VERSION = '0.05';
+my $VERSION = '0.06';
 
 #-----------------------
 # Start of configuration
@@ -38,6 +38,7 @@ my $Config = {
        gnupingu      => 'ffd133',	# von http://www.gnupingu.ch/
        debian        => 'ffa500',	# orange
        hackerfunk    => '99b2cd',	# blau/grau
+       wilhelmtux    => 'ffffbf',	# from https://wilhelmtux.ch/
     },
     ical_dir    => 'ical',
 };
