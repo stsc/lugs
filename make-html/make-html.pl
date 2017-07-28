@@ -9,7 +9,7 @@ use strict;
 use warnings;
 use lib qw(lib);
 
-my $VERSION = '0.06';
+my $VERSION = '0.07';
 
 #-----------------------
 # Start of configuration
@@ -224,9 +224,10 @@ sub process_events
         my $ics_file = "$anchor.ics";
         my $ics_link = join '/', ($Config->{ical_dir}, $ics_file);
 
-        $self->print_template('ical',
+        $self->print_template('ical/anker',
         {
-            LINK => $ics_link,
+            LINK  => $ics_link,
+            ANKER => $anchor,
         });
 
         $self->print_raw_html('</tr>');
@@ -359,9 +360,9 @@ __DATA__
 -
 <br>[% INFORMATIONEN %]
 
-# ical
+# ical/anker
 -
-<td valign=top><a href="[% LINK %]">iCal</a></td>
+<td valign=top><a href="[% LINK %]">iCal</a><br><a href="#[% ANKER %]">#</a></td>
 
 # tabellenende
 -
