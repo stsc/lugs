@@ -15,13 +15,13 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # Author: Steven Schubiger <stsc@refcnt.org>
-# Last modified: Fri Apr 17 23:12:38 CEST 2015
+# Last modified: Wed Dec 27 20:44:28 CET 2017
 
 use strict;
 use warnings;
 use lib qw(lib);
 
-my $VERSION = '0.03';
+my $VERSION = '0.04';
 
 my $Config = {
     base_url => 'http://www.lugs.ch/lugs/termine',
@@ -45,6 +45,7 @@ use constant false => 0;
 use Data::ICal ();
 use Data::ICal::Entry::Event ();
 use Date::ICal ();
+use DateTime ();
 use Encode qw(encode);
 use File::Spec ();
 use HTML::Entities qw(decode_entities);
@@ -109,8 +110,20 @@ sub process_events
         sub { decode_entities($_) foreach @_      }->($location, $summary, defined $more ? $more : ());
         sub { $_ = encode('UTF-8', $_) foreach @_ }->($location, $summary, defined $more ? $more : ());
 
-        my $offset = $Config->{offset} ? $Config->{offset} : ((localtime)[8] ? '+0200' : '+0100');
-
+        my $get_offset = sub
+        {
+            my ($hour, $minute) = @_;
+            return $Config->{offset} if $Config->{offset};
+            my $dt = DateTime->new(
+                year      => $year,
+                month     => $month,
+                day       => $day,
+                hour      => $hour,
+                minute    => $minute,
+                time_zone => 'Europe/Zurich',
+            );
+            return $dt->is_dst() ? '+0200' : '+0100';
+        };
         $ical_event->add_properties(
             dtstamp => Date::ICal->new->ical,
             dtstart => Date::ICal->new(
@@ -120,7 +133,7 @@ sub process_events
                 hour   => $time{start_hour},
                 min    => $time{start_min},
                 sec    => 00,
-                offset => $offset,
+                offset => $get_offset->(@time{qw(start_hour start_min)}),
             )->ical,
             dtend => Date::ICal->new(
                 year   => $year,
@@ -129,7 +142,7 @@ sub process_events
                 hour   => $time{end_hour},
                 min    => $time{end_min},
                 sec    => 00,
-                offset => $offset,
+                offset => $get_offset->(@time{qw(end_hour end_min)}),
             )->ical,
             location    => $location,
             summary     => $summary,
