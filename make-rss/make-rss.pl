@@ -15,16 +15,16 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # Author: Steven Schubiger <stsc@refcnt.org>
-# Last modified: Wed Jul 24 14:45:23 CEST 2013
+# Last modified: Thu Dec 28 18:18:44 CET 2017
 
 use strict;
 use warnings;
 use lib qw(lib);
 
-my $VERSION = '0.01';
+my $VERSION = '0.02';
 
 my $Config = {
-    base_url  => 'http://www.lugs.ch/lugs/termine/',
+    base_url  => 'https://www.lugs.ch/lugs/termine/',
     language  => 'de',
     input     => './termine.txt',
     output    => './termine.rss',
