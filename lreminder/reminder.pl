@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-
+#
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
@@ -15,7 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # Author: Steven Schubiger <stsc@refcnt.org>
-# Last modified: Thu Feb  4 23:21:02 CET 2016
+# Last modified: Wed 09 Jun 2021 01:19:17 PM CEST
 
 use strict;
 use warnings;
@@ -25,7 +25,7 @@ use constant false => 0;
 
 use DateTime ();
 use DBI ();
-use Encode qw(encode);
+use Encode qw(decode encode);
 use File::Basename ();
 use File::Spec ();
 use FindBin qw($Bin);
@@ -37,7 +37,7 @@ use Text::Wrap::Smart::XS qw(fuzzy_wrap);
 use URI ();
 use WWW::Mechanize ();
 
-my $VERSION = '0.52';
+my $VERSION = '0.53';
 
 #-----------------------
 # Start of configuration
@@ -240,11 +240,13 @@ ${\info_string()}
 MSG
 
     if ($run) {
+	$title = decode('UTF-8', $title);
         sendmail(
-            From    => $Config->{mail_from},
-            To      => $mail_subscriber,
-            Subject => encode('MIME-Q', "LUGS Reminder - $title"),
-            Message => $message,
+            From          => $Config->{mail_from},
+            To            => $mail_subscriber,
+            Subject       => encode('MIME-Q', "LUGS Reminder - $title"),
+            Message       => $message,
+           'Content-Type' => 'text/plain; charset="UTF-8"',
         ) or die "Cannot send mail: $Mail::Sendmail::error";
     }
     elsif ($test) {
