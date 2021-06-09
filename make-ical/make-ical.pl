@@ -15,13 +15,13 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # Author: Steven Schubiger <stsc@refcnt.org>
-# Last modified: Wed Dec 27 21:42:20 CET 2017
+# Last modified: Wed 09 Jun 2021 10:05:08 PM CEST
 
 use strict;
 use warnings;
 use lib qw(lib);
 
-my $VERSION = '0.05';
+my $VERSION = '0.06';
 
 my $Config = {
     base_url => 'https://www.lugs.ch/lugs/termine',
@@ -46,9 +46,7 @@ use Data::ICal ();
 use Data::ICal::Entry::Event ();
 use Date::ICal ();
 use DateTime ();
-use Encode qw(encode);
 use File::Spec ();
-use HTML::Entities qw(decode_entities);
 use LUGS::Events::Parser ();
 
 sub new
@@ -106,9 +104,6 @@ sub process_events
 
         $location =~ s/\(.+?\)//g;
         $more =~ s/<.+?>//g if defined $more;
-
-        sub { decode_entities($_) foreach @_      }->($location, $summary, defined $more ? $more : ());
-        sub { $_ = encode('UTF-8', $_) foreach @_ }->($location, $summary, defined $more ? $more : ());
 
         my $get_offset = sub
         {
