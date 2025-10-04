@@ -15,7 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # Author: Steven Schubiger <stsc@refcnt.org>
-# Last modified: Fr 16 Mai 2025 22:22:21 CEST 
+# Last modified: Sa 04 Okt 2025 20:46:11 CEST
 
 use strict;
 use warnings;
@@ -37,7 +37,7 @@ use Text::Wrap::Smart::XS qw(fuzzy_wrap);
 use URI ();
 use WWW::Mechanize ();
 
-my $VERSION = '0.54';
+my $VERSION = '0.55';
 
 #-----------------------
 # Start of configuration
@@ -211,8 +211,8 @@ sub send_mail
     my $time        = $event->get_event_time;
     my $title       = $event->get_event_title;
     my $color       = $event->get_event_color;
-    my $location    = $event->get_event_location;
-    my $responsible = $event->get_event_responsible;
+    my $location    = $event->get_event_location || '';
+    my $responsible = $event->get_event_responsible || '';
     my $more        = $event->get_event_more || '';
 
     wrap_text(\$more);
